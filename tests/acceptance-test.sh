@@ -220,7 +220,7 @@ else
     oos_status=$(echo "$stOos" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
     echo -e "${GRAY}     Статус: $oos_status${NC}"
     
-    write_step "Добавляем 10 ключей..."
+    write_step "Добавляем 60 ключей..."
     curl -s -X POST "$BASE_URL/api/admin/db/add_keys" >/dev/null
     sleep 1
     stats4b=$(api_get "/api/admin/stats")

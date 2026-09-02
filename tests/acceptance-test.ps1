@@ -1,4 +1,4 @@
-﻿param(
+param(
     [string]$BaseUrl = "http://localhost:8080",
     [string]$Label   = "LOCAL",
     [switch]$NoReset  # для PROD: пропускать migrate:fresh
@@ -212,7 +212,7 @@ if (-not $o4.id) {
     Write-Host "     Статус: $($stOos.status)" -ForegroundColor Gray
     $ok4a = ($stOos.status -eq "out_of_stock")
 
-    Write-Step "Добавляем 10 ключей..."
+    Write-Step "Добавляем 60 ключей..."
     try { Invoke-RestMethod -Uri "$BaseUrl/api/admin/db/add_keys" -Method POST -ErrorAction Stop | Out-Null; Start-Sleep -Seconds 1 } catch {}
     $st4b = ApiGet "/api/admin/stats"
     Write-Host "     Ключей в пуле: $($st4b.keys_available)" -ForegroundColor Gray
