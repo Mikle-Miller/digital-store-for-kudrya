@@ -86,13 +86,16 @@ class AdminController extends Controller
                 ProductKey::whereNull('order_id')->delete();
                 return response()->json(['message' => 'Свободные ключи удалены. Склад пуст.']);
             case 'add_keys':
-                for ($i = 0; $i < 10; $i++) {
-                    ProductKey::create([
-                        'sku' => 'KEY-CS2-PRIME',
-                        'key_code' => 'TEST-KEY-' . strtoupper(\Illuminate\Support\Str::random(8))
-                    ]);
+                $skus = ProductKey::select('sku')->distinct()->pluck('sku');
+                foreach ($skus as $sku) {
+                    for ($i = 0; $i < 5; $i++) {
+                        ProductKey::create([
+                            'sku' => $sku,
+                            'key_code' => 'TEST-KEY-' . strtoupper(\Illuminate\Support\Str::random(8))
+                        ]);
+                    }
                 }
-                return response()->json(['message' => 'Добавлено 10 новых ключей.']);
+                return response()->json(['message' => 'Добавлено по 5 новых ключей для ВСЕХ товаров.']);
             default:
                 return response()->json(['error' => 'Unknown action'], 400);
         }
