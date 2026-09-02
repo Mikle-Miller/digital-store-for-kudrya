@@ -86,7 +86,12 @@ class AdminController extends Controller
                 ProductKey::whereNull('order_id')->delete();
                 return response()->json(['message' => 'Свободные ключи удалены. Склад пуст.']);
             case 'add_keys':
-                $skus = ProductKey::select('sku')->distinct()->pluck('sku');
+                $skus = [
+                    'KEY-CS2-PRIME', 'KEY-GTA5', 'KEY-EFT',
+                    'STEAM-TOPUP-500', 'STEAM-TOPUP-1000', 'STEAM-TOPUP-2500',
+                    'SUB-DISCORD-1M', 'SUB-YT-3M', 'SUB-SPOTIFY-1M',
+                    'GIFT-PSN-1000', 'GIFT-XBOX-1500', 'GIFT-ROBLOX-800'
+                ];
                 foreach ($skus as $sku) {
                     for ($i = 0; $i < 5; $i++) {
                         ProductKey::create([
