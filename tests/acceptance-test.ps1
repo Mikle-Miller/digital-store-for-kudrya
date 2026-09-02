@@ -1,4 +1,4 @@
-param(
+﻿param(
     [string]$BaseUrl = "http://localhost:8080",
     [string]$Label   = "LOCAL",
     [switch]$NoReset  # для PROD: пропускать migrate:fresh
