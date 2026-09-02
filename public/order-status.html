@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Статус заказа — GGSel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { display: flex; flex-direction: column; min-height: 100vh; }
+    .status-page { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 16px; }
+    .status-card {
+      background: #fff; border-radius: 20px;
+      padding: 40px; width: 100%; max-width: 480px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+      text-align: center;
+    }
+    .status-icon { font-size: 64px; margin-bottom: 16px; display: block; }
+    .status-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+    .status-subtitle { color: #9B9B9B; font-size: 14px; margin-bottom: 28px; }
+    .order-id { font-size: 12px; color: #C4C4C4; margin-bottom: 24px; }
+    .key-box {
+      background: #F5FFF8; border: 2px dashed #25C244;
+      border-radius: 12px; padding: 18px 24px; margin: 20px 0;
+    }
+    .key-label { font-size: 11px; color: #9B9B9B; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .key-value { font-size: 22px; font-weight: 800; letter-spacing: 4px; color: #1A1A1A; font-family: monospace; }
+    .key-copy {
+      margin-top: 12px; font-size: 13px; color: #25C244;
+      cursor: pointer; font-weight: 600;
+    }
+    .key-copy:hover { opacity: 0.8; }
+    .status-badge {
+      display: inline-block; padding: 5px 14px; border-radius: 20px;
+      font-size: 12px; font-weight: 700; margin-bottom: 16px;
+    }
+    .badge-created   { background:#EEF2FF; color:#4F46E5; }
+    .badge-paid      { background:#FFF7E6; color:#D97706; }
+    .badge-delivering{ background:#E6F4FF; color:#0284C7; }
+    .badge-delivered { background:#ECFDF5; color:#059669; }
+    .badge-failed    { background:#FEF2F2; color:#DC2626; }
+    .badge-out_of_stock { background:#FFF7ED; color:#EA580C; }
+    .badge-delivery_failed { background:#FEF2F2; color:#DC2626; }
+    .spinner {
+      width: 48px; height: 48px; border: 4px solid #E8E8E8;
+      border-top-color: #1A1A1A; border-radius: 50%;
+      animation: spin 0.8s linear infinite; margin: 0 auto 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .simulate-btns { display: flex; gap: 10px; margin-top: 24px; }
+    .btn-success { flex: 1; padding: 11px; background: #25C244; color: #fff; border: none; border-radius: 9px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .btn-fail    { flex: 1; padding: 11px; background: #fff; color: #DC2626; border: 1.5px solid #DC2626; border-radius: 9px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .btn-home    { display: block; width: 100%; padding: 12px; background: #1A1A1A; color: #fff; border: none; border-radius: 9px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 16px; }
+    .simulate-hint { font-size: 11px; color: #C4C4C4; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container">
+    <div class="header-inner">
+      <a href="/" class="header-logo">
+        <div class="logo-icon"><span></span><span></span></div>
+        <span class="logo-text">GGSel</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="status-page">
+  <div class="status-card" id="statusCard">
+    <div class="spinner"></div>
+    <div class="status-title">Загрузка...</div>
+  </div>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const orderId = params.get('id');
+
+const STATUS_META = {
+  created:          { icon:'🛒', title:'Заказ создан',          sub:'Ожидаем оплату',                badge:'badge-created' },
+  paid:             { icon:'✅', title:'Оплата получена',        sub:'Готовим ваш товар...',           badge:'badge-paid' },
+  delivering:       { icon:'⚡', title:'Выдаём товар',           sub:'Получаем код у поставщика...',   badge:'badge-delivering' },
+  delivered:        { icon:'🎉', title:'Готово!',                sub:'Ваш код ниже. Приятной игры!',   badge:'badge-delivered' },
+  payment_failed:   { icon:'❌', title:'Оплата не прошла',       sub:'Попробуйте снова',               badge:'badge-failed' },
+  out_of_stock:     { icon:'⚠️', title:'Нет в наличии',          sub:'Оплата прошла, но ключи закончились. Мы уведомим вас при пополнении.', badge:'badge-out_of_stock' },
+  delivery_failed:  { icon:'⚠️', title:'Ошибка выдачи',          sub:'Технические проблемы. Обратитесь в поддержку.', badge:'badge-delivery_failed' },
+};
+
+function render(order) {
+  const meta = STATUS_META[order.status] || STATUS_META.created;
+  const isFinal = ['delivered','payment_failed'].includes(order.status);
+  const isPending = ['created','paid','delivering'].includes(order.status);
+
+  let html = `
+    <span class="status-icon">${meta.icon}</span>
+    <span class="status-badge ${meta.badge}">${order.status.replace('_',' ').toUpperCase()}</span>
+    <div class="status-title">${meta.title}</div>
+    <div class="status-subtitle">${meta.sub}</div>
+    <div class="order-id">Заказ #${order.id} · ${order.sku}</div>
+  `;
+
+  if (order.status === 'delivered' && order.key_code) {
+    html += `
+      <div class="key-box">
+        <div class="key-label">Ваш ключ активации</div>
+        <div class="key-value" id="keyValue">${order.key_code}</div>
+        <div class="key-copy" onclick="copyKey()">📋 Скопировать</div>
+      </div>`;
+  }
+
+  if (isPending) {
+    html += `
+      <div class="simulate-hint">Эмуляция платежа (тестовый режим)</div>
+      <div class="simulate-btns">
+        <button class="btn-success" onclick="pay('paid')">✅ Оплата прошла</button>
+        <button class="btn-fail"    onclick="pay('failed')">❌ Отклонить</button>
+      </div>`;
+  }
+
+  html += `<button class="btn-home" onclick="location.href='/'">← На главную</button>`;
+  document.getElementById('statusCard').innerHTML = html;
+}
+
+function copyKey() {
+  const key = document.getElementById('keyValue')?.textContent;
+  if (key) {
+    navigator.clipboard.writeText(key).then(() => {
+      document.querySelector('.key-copy').textContent = '✅ Скопировано!';
+      setTimeout(() => document.querySelector('.key-copy').textContent = '📋 Скопировать', 2000);
+    });
+  }
+}
+
+let pollTimer;
+async function poll() {
+  try {
+    const res = await fetch(`/api/orders/${orderId}`);
+    const order = await res.json();
+    render(order);
+    if (['delivered','payment_failed','out_of_stock','delivery_failed'].includes(order.status)) {
+      clearInterval(pollTimer);
+    }
+  } catch(e) {
+    document.getElementById('statusCard').innerHTML = `<span class="status-icon">❌</span><div class="status-title">Ошибка</div><div class="status-subtitle">Не удалось загрузить заказ</div><button class="btn-home" onclick="location.href='/'">← На главную</button>`;
+  }
+}
+
+let paying = false;
+async function pay(status) {
+  if (paying) return;
+  paying = true;
+  const evtId = 'evt_' + Math.random().toString(36).substr(2,9);
+  await fetch('/api/webhook/payment', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      event_id: evtId,
+      order_id: orderId,
+      status,
+      amount: 0,
+      currency: 'RUB',
+      created_at: new Date().toISOString()
+    })
+  });
+  paying = false;
+}
+
+if (!orderId) {
+  document.getElementById('statusCard').innerHTML = '<span class="status-icon">❌</span><div class="status-title">Заказ не найден</div><button class="btn-home" onclick="location.href=\'/\'">← На главную</button>';
+} else {
+  poll();
+  pollTimer = setInterval(poll, 2000);
+}
+</script>
+</body>
+</html>

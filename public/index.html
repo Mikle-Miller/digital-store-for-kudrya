@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GGSel — Цифровые товары для геймеров</title>
+  <meta name="description" content="Игровые ключи, пополнения Steam, подписки и гифт-карты по лучшим ценам.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header" id="header">
+  <div class="container">
+    <div class="header-inner">
+      <div class="header-logo">
+        <div class="logo-icon"><span></span><span></span></div>
+        <span class="logo-text">GGSel</span>
+      </div>
+      <button class="catalog-btn" id="catalogBtn">
+        <svg width="16" height="16" viewBox="0 0 16 16"><rect width="7" height="7" rx="1.5" fill="currentColor"/><rect x="9" width="7" height="7" rx="1.5" fill="currentColor"/><rect y="9" width="7" height="7" rx="1.5" fill="currentColor"/><rect x="9" y="9" width="7" height="7" rx="1.5" fill="currentColor"/></svg>
+        Каталог
+      </button>
+      <div class="search-bar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <input type="text" id="searchInput" placeholder="Игра, приложение или услуга...">
+        <button class="search-submit" id="searchBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
+      </div>
+      <button class="header-user" id="userBtn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- CATALOG DROPDOWN -->
+  <div class="catalog-dropdown" id="catalogDropdown">
+    <div class="container">
+      <div class="dropdown-inner">
+        <div class="dropdown-left">
+          <a href="#" class="dropdown-category active">Игры и игровые сервисы <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></a>
+          <a href="#" class="dropdown-category">Игровые ценности <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></a>
+          <a href="#" class="dropdown-category">Мобильные игры <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></a>
+          <a href="#" class="dropdown-category">Сервисы и соцсети <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></a>
+          <a href="#" class="dropdown-category">Программы <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></a>
+        </div>
+        <div class="dropdown-right">
+          <div class="dropdown-col">
+            <h4>Steam <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></h4>
+            <a href="#">Игры и DLC</a><a href="#">Пополнение баланса</a><a href="#">Подарочные карты</a><a href="#">Коллекционные карточки</a><a href="#">Смена региона</a>
+          </div>
+          <div class="dropdown-col">
+            <h4>PlayStation <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></h4>
+            <a href="#">Игры и DLC</a><a href="#">Пополнение баланса</a><a href="#">Подарочные карты</a><a href="#">Новые аккаунты</a><a href="#">PS Plus</a><a href="#">EA Play</a>
+          </div>
+          <div class="dropdown-col">
+            <h4>Xbox <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></h4>
+            <a href="#">Игры и DLC</a><a href="#">Пополнение баланса</a><a href="#">Новые аккаунты</a><a href="#">Xbox Game Pass</a><a href="#">Услуги</a>
+          </div>
+          <div class="dropdown-col">
+            <h4>Nintendo <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></h4>
+            <a href="#">Игры и DLC</a><a href="#">Подарочные карты</a><a href="#">Новые аккаунты</a><a href="#">NS Online</a>
+          </div>
+          <div class="dropdown-col">
+            <h4>Battle.net <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></h4>
+            <a href="#">World of Warcraft</a><a href="#">Подарочные карты</a><a href="#">Пополнение баланса</a><a href="#">Новые аккаунты</a><a href="#">Смена региона</a>
+          </div>
+          <div class="dropdown-col">
+            <h4>Подборки <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></h4>
+            <a href="#">Скидки 90%</a><a href="#">Популярные издатели</a><a href="#">Лучшие серии игр</a><a href="#">Steam Deck</a><a href="#">Bundle-наборы</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="main-content">
+  <div class="container">
+
+    <!-- BANNER CAROUSEL -->
+    <section class="banner-section">
+      <div class="carousel" id="carousel">
+        <div class="carousel-slides" id="carouselSlides">
+          <div class="carousel-slide"><img src="assets/banners/slide1.png" alt="Лучшие цены на ключи"></div>
+          <div class="carousel-slide"><img src="assets/banners/slide2.png" alt="Пополнение Steam"></div>
+          <div class="carousel-slide"><img src="assets/banners/slide3.png" alt="Подписки и сервисы"></div>
+        </div>
+        <button class="carousel-arrow prev" id="carouselPrev">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <button class="carousel-arrow next" id="carouselNext">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+        <div class="carousel-dots" id="carouselDots">
+          <div class="carousel-dot active" data-index="0"></div>
+          <div class="carousel-dot" data-index="1"></div>
+          <div class="carousel-dot" data-index="2"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICE ICONS -->
+    <section class="services-section">
+      <div class="services-grid">
+        <div class="service-item"><div class="service-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/8/83/Steam_icon_logo.svg" alt="Steam"></div><span class="service-name">Steam</span></div>
+        <div class="service-item"><div class="service-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram"></div><span class="service-name">Telegram</span></div>
+        <div class="service-item"><div class="service-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg" alt="Roblox"></div><span class="service-name">Roblox</span></div>
+        <div class="service-item"><div class="service-icon"><img src="https://api.dicebear.com/7.x/initials/svg?seed=Brawl&backgroundColor=F6A609" alt="Brawl Stars"></div><span class="service-name">Brawl Stars</span></div>
+        <div class="service-item"><div class="service-icon"><img src="https://api.dicebear.com/7.x/initials/svg?seed=PUBG&backgroundColor=E0A82E" alt="PUBG"></div><span class="service-name">PUBG Mob...</span></div>
+        <div class="service-item"><div class="service-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/6/67/App_Store_%28iOS%29.svg" alt="App Store"></div><span class="service-name">App Store</span></div>
+        <div class="service-item"><div class="service-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="ChatGPT"></div><span class="service-name">ChatGPT</span></div>
+        <div class="service-item"><div class="service-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Playstation_logo_colour.svg" alt="PlayStation"></div><span class="service-name">PlayStation</span></div>
+        <div class="service-item"><div class="service-icon"><img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="TikTok"></div><span class="service-name">TikTok</span></div>
+        <div class="service-item"><div class="service-icon"><img src="https://api.dicebear.com/7.x/initials/svg?seed=ML&backgroundColor=1A56DB" alt="Mobile Legends"></div><span class="service-name">Mobile Leg...</span></div>
+        <div class="service-item">
+          <div class="service-more">еще<br>841</div>
+          <span class="service-name">&nbsp;</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEAM TOP-UP BLOCK -->
+    <section class="steam-section">
+      <div class="steam-block">
+        <div class="steam-logo">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/8/83/Steam_icon_logo.svg" alt="Steam">
+        </div>
+        <div class="steam-info">
+          <div class="steam-info-title">Пополнение Steam <span class="steam-badge">5%</span></div>
+          <div class="steam-promo">Ввести промокод ▾</div>
+        </div>
+        <div class="steam-form">
+          <div class="steam-input-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input type="text" class="steam-input" id="steamLogin" placeholder="Логин Steam">
+          </div>
+          <div class="steam-amount-wrap">
+            <div class="steam-amount-value">Сумма 500₽</div>
+            <div class="steam-currency-group">
+              <button class="currency-btn active" id="currUsd" data-currency="$">$</button>
+              <button class="currency-btn" id="currKzt" data-currency="₸">₸</button>
+              <button class="currency-btn" id="currRub" data-currency="₽">₽</button>
+            </div>
+          </div>
+          <button class="steam-pay-btn" id="steamPayBtn">Оплатить 500$</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- POPULAR PRODUCTS -->
+    <section class="products-section">
+      <div class="section-header-tabs">
+        <h2 class="section-title">Популярные товары</h2>
+        <div class="tabs" id="popularTabs">
+          <button class="tab-btn active" data-tab="donats">🎮 Донат</button>
+          <button class="tab-btn" data-tab="subs">💎 Подписки</button>
+          <button class="tab-btn" data-tab="items">🔧 Предметы</button>
+          <button class="tab-btn" data-tab="accounts">👤 Аккаунты</button>
+          <button class="tab-btn" data-tab="keys">🔑 Ключи</button>
+          <button class="tab-btn" data-tab="currency">💰 Игровая валюта</button>
+          <button class="tab-btn" data-tab="other">📦 Другое</button>
+        </div>
+      </div>
+      <div class="products-grid" id="popularGrid"></div>
+    </section>
+
+    <!-- RECOMMENDED PRODUCTS -->
+    <section class="products-section">
+      <div class="section-header">
+        <h2 class="section-title">Рекомендованные товары</h2>
+        <a href="#" class="section-link">Показать все</a>
+      </div>
+      <div class="products-grid" id="recommendedGrid"></div>
+    </section>
+
+    <!-- OTHER PRODUCTS -->
+    <section class="products-section">
+      <div class="section-header">
+        <h2 class="section-title">Другие товары</h2>
+        <a href="#" class="section-link">Показать все</a>
+      </div>
+      <div class="products-grid" id="otherGrid"></div>
+    </section>
+
+    <!-- REVIEWS (Закомментировано по заданию) 
+    <section class="reviews-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Последние отзывы</h2>
+          <p class="reviews-subtitle">Все отзывы взяты с независимой площадки</p>
+        </div>
+        <a href="#" class="section-link">Показать все</a>
+      </div>
+      <div class="reviews-grid" id="reviewsGrid"></div>
+    </section>
+    -->
+
+  </div><!-- /.container -->
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <nav class="footer-nav">
+      <div class="footer-links">
+        <a href="#">Стать продавцом</a>
+        <a href="#">Бонусы</a>
+        <a href="#">Поддержка</a>
+        <a href="#">Гарантии</a>
+        <a href="#">Отзывы</a>
+      </div>
+      <div class="footer-socials">
+        <a href="#" class="footer-social" title="VK">Вк</a>
+        <a href="#" class="footer-social" title="Telegram">✈</a>
+        <a href="#" class="footer-social" title="TikTok">♪</a>
+        <a href="#" class="footer-social" title="YouTube">▶</a>
+      </div>
+    </nav>
+    <div class="footer-bottom">
+      <div class="footer-legal">
+        <a href="#">Политика конфиденциальности</a>
+        <a href="#">Соглашение</a>
+        <a href="#">Договор-оферта</a>
+      </div>
+      <div class="footer-payments">
+        <div class="payment-badge payment-visa">VISA</div>
+        <div class="payment-badge payment-mir">МИР</div>
+        <div class="payment-badge payment-mc"><span>●</span><span>●</span></div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ORDER MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="orderModal">
+    <h2 class="modal-title">Оформление заказа</h2>
+    <p class="modal-product" id="modalProductName"></p>
+    <div class="modal-price" id="modalPrice"></div>
+    <div class="modal-field">
+      <label for="modalEmail">Email для получения</label>
+      <input type="email" id="modalEmail" placeholder="your@email.com">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="modalCancel">Отмена</button>
+      <button class="btn-primary" id="modalConfirm">Оплатить</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Админка — GGSel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #F0F0F0; color: #1A1A1A; font-size: 14px; }
+    .header { background: #1A1A1A; color: #fff; padding: 14px 24px; display: flex; align-items: center; gap: 16px; }
+    .header h1 { font-size: 16px; font-weight: 700; }
+    .header a { color: #aaa; font-size: 13px; margin-left: auto; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+    .card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+    .card-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+    .badge-warn { background: #FFF7ED; color: #EA580C; }
+    .badge-err  { background: #FEF2F2; color: #DC2626; }
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; padding: 8px 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #9B9B9B; border-bottom: 1px solid #E8E8E8; }
+    td { padding: 12px; border-bottom: 1px solid #F0F0F0; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    .status-pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .s-out_of_stock  { background:#FFF7ED; color:#EA580C; }
+    .s-delivery_failed { background:#FEF2F2; color:#DC2626; }
+    .btn { padding: 7px 16px; border: none; border-radius: 7px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .btn-retry { background: #1A1A1A; color: #fff; }
+    .btn-retry:disabled { background: #ccc; cursor: not-allowed; }
+    .btn-retry:hover:not(:disabled) { background: #333; }
+    .empty { text-align: center; padding: 40px; color: #9B9B9B; font-size: 14px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+    .stat-card { background: #fff; border-radius: 12px; padding: 16px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+    .stat-value { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
+    .stat-label { font-size: 12px; color: #9B9B9B; }
+    .green { color: #25C244; }
+    .red   { color: #DC2626; }
+    .orange { color: #EA580C; }
+    .refresh-btn { padding: 8px 16px; background: #F0F0F0; border: none; border-radius: 7px; font-size: 13px; cursor: pointer; margin-left: auto; }
+    .refresh-btn:hover { background: #E0E0E0; }
+    .toast { position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; background: #1A1A1A; color: #fff; border-radius: 10px; font-size: 14px; font-weight: 500; transform: translateY(80px); transition: transform 0.3s ease; z-index: 999; }
+    .toast.show { transform: translateY(0); }
+  </style>
+</head>
+<body>
+<div class="header">
+  <h1>⚙️ GGSel Admin</h1>
+  <a href="/">← На витрину</a>
+</div>
+
+<div class="container">
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card"><div class="stat-value" id="sTotal">—</div><div class="stat-label">Всего заказов</div></div>
+    <div class="stat-card"><div class="stat-value green" id="sDelivered">—</div><div class="stat-label">Выданных</div></div>
+    <div class="stat-card"><div class="stat-value orange" id="sStuck">—</div><div class="stat-label">Требуют внимания</div></div>
+    <div class="stat-card"><div class="stat-value" id="sKeys">—</div><div class="stat-label">Ключей в пуле</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Управление базой данных (Для тестирования сбоев)</div>
+    <div style="display: flex; gap: 12px; margin-bottom: 8px;">
+      <button class="btn btn-retry" onclick="dbAction('reset')" style="background: #DC2626;">Сбросить БД (Seed)</button>
+      <button class="btn btn-retry" onclick="dbAction('empty')" style="background: #EA580C;">Удалить все ключи (Вызвать Out of Stock)</button>
+      <button class="btn btn-retry" onclick="dbAction('add_keys')" style="background: #25C244;">Добавить 10 ключей</button>
+    </div>
+    <p style="font-size: 12px; color: #888;">Используйте эти кнопки для эмуляции сбоев и восстановления пула ключей.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      ⚠️ Оплачено, но не выдано
+      <button class="refresh-btn" onclick="loadStuck()">↻ Обновить</button>
+    </div>
+    <div id="stuckContainer"><div class="empty">Загрузка...</div></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+async function loadStats() {
+  try {
+    const res = await fetch('/api/admin/stats');
+    const s = await res.json();
+    document.getElementById('sTotal').textContent = s.total ?? '—';
+    document.getElementById('sDelivered').textContent = s.delivered ?? '—';
+    document.getElementById('sStuck').textContent = s.stuck ?? '—';
+    document.getElementById('sKeys').textContent = s.keys_available ?? '—';
+  } catch {}
+}
+
+async function loadStuck() {
+  try {
+    const res = await fetch('/api/admin/stuck-orders');
+    const orders = await res.json();
+    const container = document.getElementById('stuckContainer');
+
+    if (!orders.length) {
+      container.innerHTML = '<div class="empty">🎉 Нет заказов, требующих внимания</div>';
+      return;
+    }
+
+    container.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>SKU</th><th>Email</th><th>Сумма</th><th>Статус</th><th>Дата</th><th>Действие</th>
+          </tr>
+        </thead>
+        <tbody id="stuckBody"></tbody>
+      </table>`;
+
+    const body = document.getElementById('stuckBody');
+    orders.forEach(o => {
+      const tr = document.createElement('tr');
+      tr.id = `row-${o.id}`;
+      tr.innerHTML = `
+        <td><strong>${o.id}</strong></td>
+        <td><code>${o.sku}</code></td>
+        <td>${o.email || '—'}</td>
+        <td>${o.amount} ₽</td>
+        <td><span class="status-pill s-${o.status}">${o.status.replace('_',' ')}</span></td>
+        <td>${new Date(o.created_at).toLocaleString('ru')}</td>
+        <td><button class="btn btn-retry" id="retry-${o.id}" onclick="retry(${o.id})">Повторить выдачу</button></td>`;
+      body.appendChild(tr);
+    });
+  } catch(e) {
+    document.getElementById('stuckContainer').innerHTML = '<div class="empty">Ошибка загрузки</div>';
+  }
+}
+
+async function retry(orderId) {
+  const btn = document.getElementById(`retry-${orderId}`);
+  btn.disabled = true;
+  btn.textContent = 'Отправляем...';
+  try {
+    const res = await fetch(`/api/admin/retry/${orderId}`, { method: 'POST' });
+    const data = await res.json();
+    if (data.already_delivered) {
+      showToast(`✅ Заказ #${orderId} уже был выдан: ${data.key}`);
+      loadStuck(); loadStats();
+    } else {
+      showToast(`🔄 Повторная выдача для #${orderId} запущена...`);
+      
+      // Ждём 2 секунды, чтобы воркер успел отработать задачу
+      setTimeout(async () => {
+        const oRes = await fetch(`/api/orders/${orderId}`);
+        const o = await oRes.json();
+        
+        if (o.status === 'delivered') {
+          showToast(`✅ Успех! Ключ выдан: ${o.key_code}`);
+        } else if (o.status === 'out_of_stock') {
+          showToast(`⚠️ Всё ещё недостаточно ключей для ${o.sku}`);
+          btn.disabled = false;
+          btn.textContent = 'Повторить выдачу';
+        } else {
+          showToast(`⏳ Текущий статус: ${o.status}`);
+        }
+        
+        loadStuck();
+        loadStats();
+      }, 2000);
+    }
+  } catch {
+    showToast('❌ Ошибка — попробуйте снова');
+    btn.disabled = false;
+    btn.textContent = 'Повторить выдачу';
+  }
+}
+
+async function dbAction(action) {
+  try {
+    const res = await fetch(`/api/admin/db/${action}`, { method: 'POST' });
+    const data = await res.json();
+    showToast(`✅ ${data.message || 'Выполнено'}`);
+    loadStats(); loadStuck();
+  } catch {
+    showToast('❌ Ошибка при выполнении операции БД');
+  }
+}
+
+loadStats();
+loadStuck();
+setInterval(() => { loadStats(); loadStuck(); }, 10000);
+</script>
+</body>
+</html>
